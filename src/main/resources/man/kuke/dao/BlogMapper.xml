@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="man.kuke.dao.BlogMapper">
+    <!--在resource下创建 与接口路径相同-->
+    <!--    编译后 接口class文件与Mapper文件在同一路径下-->
+    <select id="addBlog" parameterType="Blog" resultType="int">
+        insert into b1og
+        values (#{id}, #{title}, #{author}, #{createTime}, #{views})
+    </select>
+    <!--动态sql语句
+        if 检测 如果传参不为空，则插入查询条件
+    -->
+    <!--    动态插入条件 方式一：-->
+    <!--    <select id="getBlogs" parameterType="map" resultType="Blog">-->
+    <!--        select * from b1og where 1=1-->
+    <!--        <if test="title != null">-->
+    <!--            AND tit1e = #{title}-->
+    <!--        </if>-->
+    <!--        <if test="id != null">-->
+    <!--            AND id = #{id}-->
+    <!--        </if>-->
+    <!--    </select>-->
+
+    <!--    where 标签作用 如果第一个条件 有条件运算符，则会自动去除-->
+    <!--    如果没有 条件匹配 where标签自动去除掉-->
+    <select id="getBlogs" parameterType="map" resultType="Blog">
+        select * from b1og
+        <where>
+            <if test="title != null">
+                AND tit1e = #{title}
+            </if>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+        </where>
+    </select>
+
+<!--    choose 语句只添加其中选取一种条件，类似于switch case-->
+<!--    otherwise 相当于default-->
+    <select id="getBlogsChoose" parameterType="map" resultType="Blog">
+        select * from b1og
+        <where>
+            <choose>
+                <when test="title != null">
+                    AND tit1e = #{title}
+                </when>
+                <when test="id != null">
+                    AND id = #{id}
+                </when>
+                <otherwise>
+                    AND 1=1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+</mapper>
