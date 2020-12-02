@@ -56,4 +56,49 @@
         </where>
     </select>
 
+<!--    sql 语句块
+        使用sql标签抽取公共部分
+        在需要使用的地方使用include标签引用即可
+-->
+<!--    注意事项：
+        最好基于单表来定义sql片段
+        不要存在where标签
+-->
+    <sql id="title_author">
+        <if test="title != null">
+            title = #{title},
+        </if>
+        <if test="author != null">
+            author = #{author}
+        </if>
+    </sql>
+
+    <select id="updateBlog" parameterType="map">
+        update b1og
+        <set>
+<!--        sql 语句块插入-->
+            <include refid="title_author"/>
+        </set>
+        where id = #{id}
+    </select>
+
+     <select id="queryForeach" parameterType="map" resultType="Blog">
+         select * from b1og
+        <where>
+<!--
+collection 集合键名字
+item 键名
+open 拼接开始字符
+close 拼接结束字符
+separate 拼接项分割字符
+-->
+<!--
+        针对单列
+-->
+            <foreach collection="ids" item="id" open="(" separator="or" close=")">
+                id = #{id}
+            </foreach>
+        </where>
+     </select>
+
 </mapper>

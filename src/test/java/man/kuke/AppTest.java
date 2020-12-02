@@ -8,9 +8,11 @@ import man.kuke.utils.MybatisUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Unit test for simple App.
@@ -63,6 +65,36 @@ public class AppTest {
         HashMap<String, Object> map = new HashMap<>();
 //        map.put("title", "Mybatis如此简单");
         List<Blog> blogs = mapper.getBlogsChoose(map);
+        for (Blog blog : blogs) {
+            System.out.println(blog);
+        }
+        session.close();
+    }
+
+    @Test
+    public void testUpdateBlog() {
+        SqlSession session = MybatisUtils.getSqlSession();
+        BlogMapper mapper = session.getMapper(BlogMapper.class);
+        Map<String, Object> map = new HashMap<>();
+        map.put("author", "李柯柯");
+        map.put("id", "111");
+        mapper.updateBlog(map);
+        session.close();
+    }
+
+    @Test
+    public void testQueryForeach() {
+        SqlSession session = MybatisUtils.getSqlSession();
+        BlogMapper mapper = session.getMapper(BlogMapper.class);
+        Map<String, Object> map = new HashMap<>();
+        ArrayList<Object> objects = new ArrayList<>();
+        objects.add("1");
+        objects.add("2");
+        objects.add("3");
+        objects.add("4");
+        map.put("ids",objects);
+        List<Blog> blogs = mapper.queryForeach(map);
+
         for (Blog blog : blogs) {
             System.out.println(blog);
         }
